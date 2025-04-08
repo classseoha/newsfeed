@@ -8,9 +8,9 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 
-@Getter
 @Entity
 @Table(name = "user")
+@Getter
 public class User extends BaseEntity {
 
     @Id

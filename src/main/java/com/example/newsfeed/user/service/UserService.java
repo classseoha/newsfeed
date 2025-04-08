@@ -2,8 +2,12 @@ package com.example.newsfeed.user.service;
 
 import com.example.newsfeed.user.dto.SignUpRequestDto;
 import com.example.newsfeed.user.dto.SignUpResponseDto;
+<<<<<<< HEAD
 import com.example.newsfeed.user.dto.UserResponseDto;
 import com.example.newsfeed.user.entity.User;
+=======
+import com.example.newsfeed.entity.User;
+>>>>>>> 3bf1016d5c5990fee0ff37da1ec0ce9ae93bbb29
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -68,6 +72,7 @@ public class UserService {
         return new UserResponseDto(findUser.getEmail(), findUser.getNickname(),findUser.getBirthDate(),findUser.getGender(),findUser.getImage());
     }
 
+    //마이페이지조회
     public UserResponseDto findByEmail(String email) {
 
        User user = userRepository.findByEmail(email)

@@ -39,6 +39,7 @@ public class UserConrtroller {
         return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
     }
 
+    //마이페이지
     @GetMapping("/{mypage}")
     public ResponseEntity<UserResponseDto> findByPage(HttpSession session) throws IllegalAccessException {
 
