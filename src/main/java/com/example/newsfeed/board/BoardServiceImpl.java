@@ -50,7 +50,7 @@ public class BoardServiceImpl implements BoardService{
 
         friendList.add(me);
 
-        List<Board> findBoardList = boardRepository.findByUserIn(friendList);
+        List<Board> findBoardList = boardRepository.findByUserInOrderByModifiedAtDesc(friendList);
 
         return findBoardList.stream().map(BoardResponseDto::new).toList();
     }

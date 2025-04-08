@@ -13,5 +13,5 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
         return findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    List<Board> findByUserIn(List<User> userList);
+    List<Board> findByUserInOrderByModifiedAtDesc(List<User> userList);
 }
