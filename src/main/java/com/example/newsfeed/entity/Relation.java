@@ -9,10 +9,10 @@ import org.springframework.data.annotation.CreatedDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "realation")
+@Table(name = "relation")
 @Getter
 @NoArgsConstructor
-public class Realation {
+public class Relation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
