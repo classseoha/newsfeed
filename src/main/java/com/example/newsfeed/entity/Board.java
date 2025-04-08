@@ -1,9 +1,15 @@
 package com.example.newsfeed.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "board")
+@Getter
+@NoArgsConstructor
 public class Board extends BaseEntity {
 
     @Id
@@ -18,8 +24,14 @@ public class Board extends BaseEntity {
 
     private String image;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    public Board(String title, String contents, String image) {
+        this.title = title;
+        this.contents = contents;
+        this.image = image;
+    }
 }
