@@ -44,7 +44,7 @@ public class BoardServiceImpl implements BoardService{
     @Transactional
     public List<BoardResponseDto> findAllBoardsByMeAndFriends(String email) {
 
-        List<User> friendList = relationRepository.findFriendList();
+        List<User> friendList = relationRepository.findFriends(email);
 
         User me = userRepository.findUserByEmailOrElseThrow(email);
 
@@ -56,9 +56,15 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public BoardResponseDto findBoardById(Long id) {
+    public BoardResponseDto findBoardById(Long id, String email) {
+
+        List<User> friendList = relationRepository.findFriends(email);
 
         Board findBoardById = boardRepository.findBoardByIdOrElseThrow(id);
+
+        if(!friendList.contains(findBoardById.getUser())){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
 
         return new BoardResponseDto(findBoardById) ;
     }

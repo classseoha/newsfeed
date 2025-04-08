@@ -42,10 +42,16 @@ public class BoardController {
     }
 
 
-
-
     //게시글 상세 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<BoardResponseDto> findBoardById(@PathVariable Long id){
 
+        String email = "email@naver.com";
+
+        BoardResponseDto boardById = boardService.findBoardById(id, email);
+
+        return new ResponseEntity<>(boardById, HttpStatus.OK);
+    }
 
     //게시글 수정
     @PatchMapping("/{id}")

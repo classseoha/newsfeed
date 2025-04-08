@@ -7,7 +7,7 @@ import java.util.List;
 public interface BoardService {
     BoardResponseDto createBoard(BoardRequestDto boardRequestDto);
 
-    BoardResponseDto findBoardById(Long id);
+    BoardResponseDto findBoardById(Long id, String email);
 
     UserResponseDto findBoardCreatorById(Long id);
 
