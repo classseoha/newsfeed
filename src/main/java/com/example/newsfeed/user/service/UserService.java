@@ -1,7 +1,7 @@
-package com.example.newsfeed.service;
+package com.example.newsfeed.user.service;
 
-import com.example.newsfeed.dto.SignUpRequestDto;
-import com.example.newsfeed.dto.SignUpResponseDto;
+import com.example.newsfeed.user.dto.SignUpRequestDto;
+import com.example.newsfeed.user.dto.SignUpResponseDto;
 import com.example.newsfeed.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

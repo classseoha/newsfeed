@@ -1,8 +1,8 @@
-package com.example.newsfeed.controller;
+package com.example.newsfeed.user.controller;
 
-import com.example.newsfeed.dto.SignUpRequestDto;
-import com.example.newsfeed.dto.SignUpResponseDto;
-import com.example.newsfeed.service.UserService;
+import com.example.newsfeed.user.dto.SignUpRequestDto;
+import com.example.newsfeed.user.dto.SignUpResponseDto;
+import com.example.newsfeed.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
