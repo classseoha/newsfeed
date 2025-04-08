@@ -16,7 +16,9 @@ public class BoardResponseDto {
 
     private String contents;
 
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 
     private String image;
 
@@ -26,7 +28,8 @@ public class BoardResponseDto {
         this.id = board.getId();
         this.title = board.getTitle();
         this.contents = board.getContents();
-        this.createAt = board.getCreatedAt();
+        this.createdAt = board.getCreatedAt();
+        this.updatedAt = board.getModifiedAt();
         this.image = board.getImage();
         this.nickname = board.getUser().getNickname();
     }

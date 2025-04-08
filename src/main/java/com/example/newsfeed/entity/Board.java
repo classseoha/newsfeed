@@ -15,12 +15,15 @@ public class Board extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @Column(nullable = false)
     private String title;
 
+    @Setter
     @Column(nullable = false, columnDefinition = "longtext")
     private String contents;
 
+    @Setter
     private String image;
 
     @Setter

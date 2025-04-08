@@ -1,30 +1,26 @@
 package com.example.newsfeed.board;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import com.example.newsfeed.UserResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/board")
+@RequestMapping("/boards")
 public class BoardController {
 
     private final BoardService boardService;
 
     // 게시글 생성
     @PostMapping
-    public ResponseEntity<BoardResponseDto> createBoard(@RequestBody BoardRequestDto boardRequestDto, HttpServletRequest httpRequest){
+    public ResponseEntity<BoardResponseDto> createBoard(@RequestBody BoardRequestDto boardRequestDto){
 
-        HttpSession session = httpRequest.getSession(false);
 
-        // 로그인에서 session에 저장하는 정보가 무엇인지 확인 필요
-        boardRequestDto.setNickname((String) session.getAttribute("sessionKey"));
+        String email = "email@naver.com";
+        boardRequestDto.setEmail(email);
 
         BoardResponseDto boardResponseDto = boardService.createBoard(boardRequestDto);
 
@@ -41,7 +37,40 @@ public class BoardController {
 
 
     //게시글 수정
+    @PatchMapping("/{id}")
+    public ResponseEntity<BoardResponseDto> updateBoard(
+            @PathVariable Long id,
+            @RequestBody BoardRequestDto boardRequestDto) {
+
+        String email = "email@naver.com";
+
+        UserResponseDto boardCreatorById = boardService.findBoardCreatorById(id);
+
+        if(!boardCreatorById.getEmail().equals(email)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
+        BoardResponseDto boardResponseDto = boardService.updateBoard(boardRequestDto, id);
+
+
+        return new ResponseEntity<>(boardResponseDto, HttpStatus.OK);
+    }
 
 
     //게시글 삭제 -> 구현 방법으로 delete 사용과 exist 컬럼 사용하는 방법이 있을 것
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBoard(@PathVariable Long id){
+
+        String email = "email@naver.com";
+
+        UserResponseDto boardCreatorById = boardService.findBoardCreatorById(id);
+
+        if(!boardCreatorById.getEmail().equals(email)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
+        boardService.deleteBoard(id);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
