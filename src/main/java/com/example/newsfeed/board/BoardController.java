@@ -31,4 +31,17 @@ public class BoardController {
         return new ResponseEntity<>(boardResponseDto, HttpStatus.CREATED);
     }
 
+
+    //뉴스피드 조회
+
+
+
+
+    //게시글 상세 조회
+
+
+    //게시글 수정
+
+
+    //게시글 삭제 -> 구현 방법으로 delete 사용과 exist 컬럼 사용하는 방법이 있을 것
 }
