@@ -2,6 +2,8 @@ package com.example.newsfeed.board;
 
 import com.example.newsfeed.UserRepository;
 import com.example.newsfeed.UserResponseDto;
+import com.example.newsfeed.board.dto.BoardRequestDto;
+import com.example.newsfeed.board.dto.BoardResponseDto;
 import com.example.newsfeed.entity.Board;
 import com.example.newsfeed.entity.User;
 import lombok.RequiredArgsConstructor;

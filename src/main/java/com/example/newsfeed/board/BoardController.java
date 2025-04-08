@@ -1,6 +1,8 @@
 package com.example.newsfeed.board;
 
 import com.example.newsfeed.UserResponseDto;
+import com.example.newsfeed.board.dto.BoardRequestDto;
+import com.example.newsfeed.board.dto.BoardResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

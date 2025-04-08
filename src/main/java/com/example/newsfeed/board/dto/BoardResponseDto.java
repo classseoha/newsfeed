@@ -1,4 +1,4 @@
-package com.example.newsfeed.board;
+package com.example.newsfeed.board.dto;
 
 import com.example.newsfeed.entity.Board;
 import lombok.AllArgsConstructor;
@@ -12,17 +12,17 @@ public class BoardResponseDto {
 
     private Long id;
 
+    private String nickname;
+
     private String title;
 
     private String contents;
 
+    private String image;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
-
-    private String image;
-
-    private String nickname;
 
     public BoardResponseDto(Board board) {
         this.id = board.getId();
