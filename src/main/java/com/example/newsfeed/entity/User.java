@@ -4,11 +4,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "user")
+@Getter
 public class User extends BaseEntity {
 
     @Id
@@ -26,5 +28,19 @@ public class User extends BaseEntity {
     private Character gender;
 
     private String image;
+
+    public User() {
+
+    }
+
+    public User(String email, String password, String nickname, Character gender, String image) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.gender = gender;
+        this.image = image;
+        this.birthDate = LocalDate.now();
+    }
+
 
 }
