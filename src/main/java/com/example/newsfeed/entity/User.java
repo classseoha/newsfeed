@@ -29,4 +29,18 @@ public class User extends BaseEntity {
 
     private String image;
 
+    public User() {
+
+    }
+
+    public User(String email, String password, String nickname, Character gender, String image) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.gender = gender;
+        this.image = image;
+        this.birthDate = LocalDate.now();
+    }
+
+
 }
