@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,6 +20,8 @@ public class BoardServiceImpl implements BoardService{
     private final BoardRepository boardRepository;
 
     private final UserRepository userRepository;
+
+    private final RelationRepository relationRepository;
 
     @Override
     public BoardResponseDto createBoard(BoardRequestDto boardRequestDto) {
@@ -35,6 +38,21 @@ public class BoardServiceImpl implements BoardService{
         Board saveBoard = boardRepository.save(board);
 
         return new BoardResponseDto(saveBoard);
+    }
+
+    @Override
+    @Transactional
+    public List<BoardResponseDto> findAllBoardsByMeAndFriends(String email) {
+
+        List<User> friendList = relationRepository.findFriendList();
+
+        User me = userRepository.findUserByEmailOrElseThrow(email);
+
+        friendList.add(me);
+
+        List<Board> findBoardList = boardRepository.findByUserIn(friendList);
+
+        return findBoardList.stream().map(BoardResponseDto::new).toList();
     }
 
     @Override
