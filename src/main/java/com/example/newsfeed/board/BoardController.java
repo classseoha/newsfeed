@@ -4,6 +4,8 @@ import com.example.newsfeed.UserResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -20,8 +22,9 @@ public class BoardController {
     @PostMapping
     public ResponseEntity<BoardResponseDto> createBoard(@RequestBody BoardRequestDto boardRequestDto){
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
 
-        String email = "email@naver.com";
         boardRequestDto.setEmail(email);
 
         BoardResponseDto boardResponseDto = boardService.createBoard(boardRequestDto);
@@ -34,7 +37,8 @@ public class BoardController {
     @GetMapping
     public ResponseEntity<List<BoardResponseDto>> findAllBoardsByMeAndFriends(){
 
-        String email = "email@naver.com";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
 
         List<BoardResponseDto> allBoardsByMeAndFriends = boardService.findAllBoardsByMeAndFriends(email);
 
@@ -46,7 +50,8 @@ public class BoardController {
     @GetMapping("/{id}")
     public ResponseEntity<BoardResponseDto> findBoardById(@PathVariable Long id){
 
-        String email = "email@naver.com";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
 
         BoardResponseDto boardById = boardService.findBoardById(id, email);
 
@@ -59,7 +64,8 @@ public class BoardController {
             @PathVariable Long id,
             @RequestBody BoardRequestDto boardRequestDto) {
 
-        String email = "email@naver.com";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
 
         UserResponseDto boardCreatorById = boardService.findBoardCreatorById(id);
 
@@ -78,7 +84,8 @@ public class BoardController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBoard(@PathVariable Long id){
 
-        String email = "email@naver.com";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
 
         UserResponseDto boardCreatorById = boardService.findBoardCreatorById(id);
 
