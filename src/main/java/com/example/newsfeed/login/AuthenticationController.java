@@ -2,6 +2,7 @@ package com.example.newsfeed.login;
 
 import com.example.newsfeed.login.dto.LoginRequestDto;
 import com.example.newsfeed.login.dto.LoginResponseDto;
+import com.example.newsfeed.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
