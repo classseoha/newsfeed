@@ -2,7 +2,6 @@ package com.example.newsfeed.board.service;
 
 import com.example.newsfeed.board.dto.BoardRequestDto;
 import com.example.newsfeed.board.dto.BoardResponseDto;
-import com.example.newsfeed.user.dto.UserResponseDto;
 
 import java.util.List;
 
