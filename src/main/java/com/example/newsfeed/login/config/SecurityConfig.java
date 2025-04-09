@@ -1,0 +1,47 @@
+package com.example.newsfeed.login.config;
+
+import com.example.newsfeed.login.JwtAuthenticationFilter;
+import com.example.newsfeed.login.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+
+// Spring Security의 전반적인 보안 설정을 담당하는 클래스 (요청에서 JWT 꺼내고, 유효한지 확인하고, 유저 정보를 SecurityContext에 등록하고, Redis에서 로그아웃 토큰인지 검사함)
+// JWT 필터도 여기에 넣어서 인증을 커스터마이징 함
+@Configuration // 이 클래스는 설정 클래스라는 뜻 (빈 등록 등에 사용)
+@EnableWebSecurity // Spring Security 기능을 사용하겠다고 선언
+@RequiredArgsConstructor // final로 선언된 필드를 자동으로 생성자 주입
+public class SecurityConfig {
+
+    private final JwtTokenProvider jwtTokenProvider; // 토큰 생성, 파싱, 검증 담당 클래스
+    private final UserDetailsService userDetailsService; // 이메일로 유저 정보 불러오는 인터페이스 구현체
+    private final RedisTemplate<String, String> redisTemplate; // 로그아웃한 토큰을 Redis에 저장하거나 조회할 때 사용
+
+    // SecurityFilterChain → Spring Security에서 필터 체인을 정의하는 방식
+    // HttpSecurity를 통해 HTTP 요청 보안 설정을 하나하나 해줄 수 있음
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        http
+                .csrf(csrf -> csrf.disable()) // CSRF 보호는 주로 세션 기반 인증에서 사용하는데, JWT 기반 인증에서는 불필요하기 때문에 비활성화
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // JWT는 세션을 사용하지 않는 인증 방식이기 때문에, STATELESS 설정을 통해 세션을 아예 사용하지 않음
+                .authorizeHttpRequests(auth -> auth // URL 별 인증 설정
+                        .requestMatchers("/authentication/**").permitAll() // /authentication/** 로 시작하는 요청은 인증 없이 허용 (로그인/회원가입 등)
+                        .anyRequest().authenticated() // 그 외의 모든 요청은 인증 필요
+                )
+                .addFilterBefore(
+                        new JwtAuthenticationFilter(jwtTokenProvider, userDetailsService, redisTemplate), // JwtAuthenticationFilter 를 직접 만든 JWT 인증 필터로 등록
+                        UsernamePasswordAuthenticationFilter.class // JWT 필터를 UsernamePasswordAuthenticationFilter 앞에 넣어서 기존 로그인 방식보다 먼저 동작하게 함
+                );
+
+        return http.build(); // 위에서 설정한 내용을 기반으로 SecurityFilterChain을 완성해서 반환함
+    }
+}
