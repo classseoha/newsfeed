@@ -4,6 +4,7 @@ import com.example.newsfeed.board.dto.BoardRequestDto;
 import com.example.newsfeed.board.dto.BoardResponseDto;
 import com.example.newsfeed.board.repository.BoardRepository;
 import com.example.newsfeed.entity.Board;
+import com.example.newsfeed.entity.Relation;
 import com.example.newsfeed.entity.User;
 import com.example.newsfeed.friends.repository.RelationRepository;
 import com.example.newsfeed.user.repository.UserRepository;
@@ -48,8 +49,7 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public List<BoardResponseDto> findAllBoardsByMeAndFriends(String email) {
 
-        List<User> friendList = new ArrayList<>();
-//        List<User> friendList = relationRepository.findFriends(email);
+        List<User> friendList = getFriendList(email);
 
         User me = userRepository.findByIdOrElseThrow(email);
 
@@ -63,17 +63,29 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public BoardResponseDto findBoardById(Long id, String email) {
 
-
-//        List<User> friendList = relationRepository.findFriends(email);
+        List<User> friendList = getFriendList(email);
 
         Board findBoardById = boardRepository.findBoardByIdOrElseThrow(id);
 
-//        if(!friendList.contains(findBoardById.getUser())){
-//            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-//        }
+        if(!friendList.contains(findBoardById.getUser())){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
 
         return new BoardResponseDto(findBoardById) ;
     }
+
+    private List<User> getFriendList(String email){
+        List<Relation> sentRequests = relationRepository.findByFollowingEmail_Email(email);
+        List<Relation> receivedRequests = relationRepository.findByFollowedEmail_Email(email);
+
+        return new ArrayList<>(sentRequests.stream()
+                .map(Relation::getFollowedEmail)
+                .filter(followedEmail -> receivedRequests.stream().anyMatch(
+                        r -> r.getFollowingEmail().getEmail().equals(followedEmail.getEmail())
+                ))
+                .toList());
+    }
+
 
     @Transactional
     @Override
