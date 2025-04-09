@@ -4,26 +4,28 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
 // 요청마다 JWT 토큰이 있으면 확인하고, 로그인 상태로 만들어주는 역할(JWT 인증을 처리하는 핵심 필터 클래스 >> 유저 정보를 SecurityContext에 넣어줌)
-@Component
-@AllArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter { // OncePerRequestFilter >> 한 요청 당 한 번만 실행하는 필터
 
     // JWT 검증 도구와 유저 정보를 불러올 도구를 주입
     private final JwtTokenProvider jwtTokenProvider; // JWT 생성/검증 도구 클래스
     private final UserDetailsService userDetailsService; // 이메일로 유저 정보(UserDetails)를 가져옴
     private final RedisTemplate<String, String> redisTemplate; // Redis 접근용 → 로그아웃된 토큰인지 확인
+
+    public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider, UserDetailsService userDetailsService, RedisTemplate<String, String> redisTemplate) {
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.userDetailsService = userDetailsService;
+        this.redisTemplate = redisTemplate;
+    }
 
     // 필터의 핵심 로직: 요청이 들어올 때마다 토큰을 꺼내서 검증하고 유저 인증을 넣어줌
     @Override

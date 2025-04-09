@@ -2,7 +2,6 @@ package com.example.newsfeed.login.config;
 
 import com.example.newsfeed.login.JwtAuthenticationFilter;
 import com.example.newsfeed.login.JwtTokenProvider;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -11,7 +10,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -19,18 +17,20 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 // Spring Security의 전반적인 보안 설정을 담당하는 클래스 (요청에서 JWT 꺼내고, 유효한지 확인하고, 유저 정보를 SecurityContext에 등록하고, Redis에서 로그아웃 토큰인지 검사함)
 // JWT 필터도 여기에 넣어서 인증을 커스터마이징 함
-@Configuration // 이 클래스는 설정 클래스라는 뜻 (빈 등록 등에 사용)
+@Configuration(proxyBeanMethods = false)
 @EnableWebSecurity // Spring Security 기능을 사용하겠다고 선언
-@RequiredArgsConstructor // final로 선언된 필드를 자동으로 생성자 주입
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider; // 토큰 생성, 파싱, 검증 담당 클래스
     private final UserDetailsService userDetailsService; // 이메일로 유저 정보 불러오는 인터페이스 구현체
     private final RedisTemplate<String, String> redisTemplate; // 로그아웃한 토큰을 Redis에 저장하거나 조회할 때 사용
+    private final PasswordEncoder passwordEncoder;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public SecurityConfig(JwtTokenProvider jwtTokenProvider, UserDetailsService userDetailsService, RedisTemplate<String, String> redisTemplate, PasswordEncoder passwordEncoder) {
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.userDetailsService = userDetailsService;
+        this.redisTemplate = redisTemplate;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // SecurityFilterChain → Spring Security에서 필터 체인을 정의하는 방식
