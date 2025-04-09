@@ -5,6 +5,7 @@ import com.example.newsfeed.user.dto.SignUpRequestDto;
 import com.example.newsfeed.user.dto.SignUpResponseDto;
 import com.example.newsfeed.user.dto.UpdateUserResquestDto;
 import com.example.newsfeed.user.dto.UserResponseDto;
+import com.example.newsfeed.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
