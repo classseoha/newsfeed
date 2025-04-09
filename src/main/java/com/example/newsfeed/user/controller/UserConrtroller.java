@@ -19,6 +19,7 @@ public class UserConrtroller {
     private final UserService userService;
     private final UserRepository userRepository;
 
+    //회원가입
     @PostMapping("/signUp")
     public ResponseEntity<SignUpResponseDto> signUp(@RequestBody SignUpRequestDto requestDto, HttpServletRequest request)
     {
@@ -30,6 +31,7 @@ public class UserConrtroller {
         return new ResponseEntity<>(signUpResponseDto, HttpStatus.CREATED);
     }
 
+    //회원조회
     @GetMapping("/{email}")
     public ResponseEntity<UserResponseDto> findById(@PathVariable String email){
         UserResponseDto userResponseDto = userService.findByEmail(email);
@@ -62,6 +64,7 @@ public class UserConrtroller {
         return ResponseEntity.ok("회원 정보가 수정되었습니다.");
     }
 
+    //회원탈퇴
     @DeleteMapping("/{email}")
     public ResponseEntity<String> deleteUser(@PathVariable("email") String email) {
             userService.delete(email);
