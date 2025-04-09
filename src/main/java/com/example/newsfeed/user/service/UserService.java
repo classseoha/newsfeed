@@ -4,8 +4,8 @@ import com.example.newsfeed.user.dto.SignUpRequestDto;
 import com.example.newsfeed.user.dto.SignUpResponseDto;
 import com.example.newsfeed.user.dto.UpdateUserResquestDto;
 import com.example.newsfeed.user.dto.UserResponseDto;
-import com.example.newsfeed.user.entity.User;
 
+import com.example.newsfeed.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -52,7 +52,7 @@ public class UserService {
 
         User user = new User(email, password, nickname, birthDate, gender, image);
 
-        User savedUser = userRepository.save(user);
+   User savedUser = userRepository.save(user);
         return new SignUpResponseDto(
                 savedUser.getEmail(),
                 savedUser.getNickname(),

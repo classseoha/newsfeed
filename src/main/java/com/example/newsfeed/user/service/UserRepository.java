@@ -1,7 +1,6 @@
 package com.example.newsfeed.user.service;
 
-
-import com.example.newsfeed.user.entity.User;
+import com.example.newsfeed.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
