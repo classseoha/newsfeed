@@ -49,9 +49,12 @@ public class UserService {
 
 
 
-        User user = new User(email, password, nickname, birthDate, gender, image);
+        // 비밀번호 암호화
+        String encodedPassword = passwordEncoder.encode(password);
 
-   User savedUser = userRepository.save(user);
+        User user = new User(email, encodedPassword, nickname, birthDate, gender, image);
+        User savedUser = userRepository.save(user);
+
         return new SignUpResponseDto(
                 savedUser.getEmail(),
                 savedUser.getNickname(),

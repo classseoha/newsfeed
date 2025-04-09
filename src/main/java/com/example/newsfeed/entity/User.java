@@ -40,7 +40,6 @@ public class User extends BaseEntity {
         this.nickname = nickname;
         this.gender = gender;
         this.image = image;
-        this.birthDate = LocalDate.now();
     }
     public void updatePassword(String password) {
         this.password = password;
