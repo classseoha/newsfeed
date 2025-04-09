@@ -1,9 +1,10 @@
 package com.example.newsfeed.board.controller;
 
-import com.example.newsfeed.board.dto.UserResponseDtoBoardTest;
 import com.example.newsfeed.board.service.BoardService;
 import com.example.newsfeed.board.dto.BoardRequestDto;
 import com.example.newsfeed.board.dto.BoardResponseDto;
+import com.example.newsfeed.user.dto.UserResponseDto;
+import com.example.newsfeed.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,8 @@ import java.util.List;
 public class BoardController {
 
     private final BoardService boardService;
+
+    private final UserService userService;
 
     // 게시글 생성
     @PostMapping
@@ -56,7 +59,7 @@ public class BoardController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
 
-        BoardResponseDto boardById = boardService.findBoardById(id, email);
+        BoardResponseDto boardById = boardService.findBoardById(id);
 
         return new ResponseEntity<>(boardById, HttpStatus.OK);
     }
@@ -70,14 +73,7 @@ public class BoardController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
 
-        UserResponseDtoBoardTest boardCreatorById = boardService.findBoardCreatorById(id);
-
-        if(!boardCreatorById.getEmail().equals(email)){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
-
-        BoardResponseDto boardResponseDto = boardService.updateBoard(boardRequestDto, id);
-
+        BoardResponseDto boardResponseDto = boardService.updateBoard(boardRequestDto, id, email);
 
         return new ResponseEntity<>(boardResponseDto, HttpStatus.OK);
     }

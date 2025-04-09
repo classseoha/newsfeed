@@ -59,7 +59,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public BoardResponseDto findBoardById(Long id, String email) {
+    public BoardResponseDto findBoardById(Long id) {
 
         List<User> friendList = relationRepository.findFriends(email);
 
@@ -72,19 +72,15 @@ public class BoardServiceImpl implements BoardService {
         return new BoardResponseDto(findBoardById) ;
     }
 
-    @Override
-    public UserResponseDto findBoardCreatorById(Long id) {
-
-        Board findBoardById = boardRepository.findBoardByIdOrElseThrow(id);
-
-        return new UserResponseDto(findBoardById.getUser());
-    }
-
     @Transactional
     @Override
-    public BoardResponseDto updateBoard(BoardRequestDto boardRequestDto, Long id) {
+    public BoardResponseDto updateBoard(BoardRequestDto boardRequestDto, Long id, String email) {
 
         Board findBoardById = boardRepository.findBoardByIdOrElseThrow(id);
+
+        if(!findBoardById.getUser().getEmail().equals(email)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "작성자만 수정이 가능합니다.");
+        }
 
         if(boardRequestDto.getTitle() != null){
             findBoardById.setTitle(boardRequestDto.getTitle());
