@@ -128,4 +128,10 @@ public class UserService {
         userRepository.flush();
 
     }
+
+    // 추가: 엔티티 그대로 반환
+    public User findEntityByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("해당 유저가 없습니다."));
+    }
 }
