@@ -7,6 +7,7 @@ import com.example.newsfeed.user.dto.UserResponseDto;
 
 import com.example.newsfeed.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,8 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-//    private final PasswordEncoder passwordEncoder;
+
+    private final PasswordEncoder passwordEncoder;
 
     //회원가입
     public SignUpResponseDto signup(SignUpRequestDto requestDto)
@@ -86,14 +88,9 @@ public class UserService {
 
     }
 
-//    public User findByEmail2(String email){
-//        return userRepository.findByEmail(email)
-//                .orElseThrow(() -> new IllegalArgumentException("해당 이메일의 유저가 없습니다."));
-//    }
-
-//    public boolean checkPassword(String reqPassword, String endcodePassword){
-//        return passwordEncoder.matches(reqPassword, endcodePassword);
-//    }
+    public boolean checkPassword(String rawPassword, String encodedPassword){
+        return passwordEncoder.matches(rawPassword, encodedPassword);
+    }
 
     //비밀번호 수정
     @Transactional

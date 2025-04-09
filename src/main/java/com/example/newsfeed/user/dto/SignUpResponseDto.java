@@ -11,7 +11,6 @@ public class SignUpResponseDto {
     private final String email;
     private final String nickname;
     private final LocalDate birthDate;
-//    private final String password;
     private final Character gender;
     private final String image;
 
@@ -21,7 +20,6 @@ public class SignUpResponseDto {
     ) {
         this.email = email;
         this.nickname = nickname;
-//        this.password = password;
         this.birthDate = birthDate;
         this.gender = gender;
         this.image = image;
