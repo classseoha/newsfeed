@@ -1,23 +1,25 @@
-package com.example.newsfeed.board;
+package com.example.newsfeed.board.service;
 
-import com.example.newsfeed.UserRepository;
-import com.example.newsfeed.UserResponseDto;
 import com.example.newsfeed.board.dto.BoardRequestDto;
 import com.example.newsfeed.board.dto.BoardResponseDto;
+import com.example.newsfeed.board.repository.BoardRepository;
 import com.example.newsfeed.entity.Board;
 import com.example.newsfeed.entity.User;
+import com.example.newsfeed.friends.repository.RelationRepository;
+import com.example.newsfeed.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class BoardServiceImpl implements BoardService{
+public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
 
@@ -46,9 +48,10 @@ public class BoardServiceImpl implements BoardService{
     @Transactional
     public List<BoardResponseDto> findAllBoardsByMeAndFriends(String email) {
 
-        List<User> friendList = relationRepository.findFriends(email);
+        List<User> friendList = new ArrayList<>();
+//        List<User> friendList = relationRepository.findFriends(email);
 
-        User me = userRepository.findUserByEmailOrElseThrow(email);
+        User me = userRepository.findByIdOrElseThrow(email);
 
         friendList.add(me);
 
@@ -60,30 +63,27 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public BoardResponseDto findBoardById(Long id, String email) {
 
-        List<User> friendList = relationRepository.findFriends(email);
+
+//        List<User> friendList = relationRepository.findFriends(email);
 
         Board findBoardById = boardRepository.findBoardByIdOrElseThrow(id);
 
-        if(!friendList.contains(findBoardById.getUser())){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
+//        if(!friendList.contains(findBoardById.getUser())){
+//            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+//        }
 
         return new BoardResponseDto(findBoardById) ;
     }
 
-    @Override
-    public UserResponseDto findBoardCreatorById(Long id) {
-
-        Board findBoardById = boardRepository.findBoardByIdOrElseThrow(id);
-
-        return new UserResponseDto(findBoardById.getUser());
-    }
-
     @Transactional
     @Override
-    public BoardResponseDto updateBoard(BoardRequestDto boardRequestDto, Long id) {
+    public BoardResponseDto updateBoard(BoardRequestDto boardRequestDto, Long id, String email) {
 
         Board findBoardById = boardRepository.findBoardByIdOrElseThrow(id);
+
+        if(!findBoardById.getUser().getEmail().equals(email)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Modifications are permitted only by the original author.");
+        }
 
         if(boardRequestDto.getTitle() != null){
             findBoardById.setTitle(boardRequestDto.getTitle());
@@ -101,11 +101,15 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public void deleteBoard(Long id) {
+    public void deleteBoard(Long id, String email) {
 
-        Board board = boardRepository.findBoardByIdOrElseThrow(id);
+        Board findBoardById = boardRepository.findBoardByIdOrElseThrow(id);
 
-        boardRepository.delete(board);
+        if(!findBoardById.getUser().getEmail().equals(email)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Deletion is permitted only for the original author.");
+        }
+
+        boardRepository.delete(findBoardById);
 
     }
 

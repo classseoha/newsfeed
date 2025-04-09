@@ -1,8 +1,10 @@
-package com.example.newsfeed.board;
+package com.example.newsfeed.board.controller;
 
-import com.example.newsfeed.UserResponseDto;
+import com.example.newsfeed.board.service.BoardService;
 import com.example.newsfeed.board.dto.BoardRequestDto;
 import com.example.newsfeed.board.dto.BoardResponseDto;
+import com.example.newsfeed.user.dto.UserResponseDto;
+import com.example.newsfeed.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,8 @@ import java.util.List;
 public class BoardController {
 
     private final BoardService boardService;
+
+    private final UserService userService;
 
     // 게시글 생성
     @PostMapping
@@ -69,14 +73,7 @@ public class BoardController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
 
-        UserResponseDto boardCreatorById = boardService.findBoardCreatorById(id);
-
-        if(!boardCreatorById.getEmail().equals(email)){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
-
-        BoardResponseDto boardResponseDto = boardService.updateBoard(boardRequestDto, id);
-
+        BoardResponseDto boardResponseDto = boardService.updateBoard(boardRequestDto, id, email);
 
         return new ResponseEntity<>(boardResponseDto, HttpStatus.OK);
     }
@@ -89,13 +86,7 @@ public class BoardController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
 
-        UserResponseDto boardCreatorById = boardService.findBoardCreatorById(id);
-
-        if(!boardCreatorById.getEmail().equals(email)){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
-
-        boardService.deleteBoard(id);
+        boardService.deleteBoard(id, email);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

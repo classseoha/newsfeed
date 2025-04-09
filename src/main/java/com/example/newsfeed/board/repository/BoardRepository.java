@@ -1,4 +1,4 @@
-package com.example.newsfeed.board;
+package com.example.newsfeed.board.repository;
 
 import com.example.newsfeed.entity.Board;
 import com.example.newsfeed.entity.User;
