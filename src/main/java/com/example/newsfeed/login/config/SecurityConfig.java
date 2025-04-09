@@ -6,10 +6,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -25,6 +28,11 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService; // 이메일로 유저 정보 불러오는 인터페이스 구현체
     private final RedisTemplate<String, String> redisTemplate; // 로그아웃한 토큰을 Redis에 저장하거나 조회할 때 사용
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
     // SecurityFilterChain → Spring Security에서 필터 체인을 정의하는 방식
     // HttpSecurity를 통해 HTTP 요청 보안 설정을 하나하나 해줄 수 있음
     @Bean
@@ -34,6 +42,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // CSRF 보호는 주로 세션 기반 인증에서 사용하는데, JWT 기반 인증에서는 불필요하기 때문에 비활성화
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // JWT는 세션을 사용하지 않는 인증 방식이기 때문에, STATELESS 설정을 통해 세션을 아예 사용하지 않음
                 .authorizeHttpRequests(auth -> auth // URL 별 인증 설정
+                        .requestMatchers(HttpMethod.POST, "/User/signUp").permitAll()
                         .requestMatchers("/authentication/**").permitAll() // /authentication/** 로 시작하는 요청은 인증 없이 허용 (로그인/회원가입 등)
                         .anyRequest().authenticated() // 그 외의 모든 요청은 인증 필요
                 )
