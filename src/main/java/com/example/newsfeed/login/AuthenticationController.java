@@ -1,5 +1,6 @@
 package com.example.newsfeed.login;
 
+import com.example.newsfeed.entity.User;
 import com.example.newsfeed.login.dto.LoginRequestDto;
 import com.example.newsfeed.login.dto.LoginResponseDto;
 import com.example.newsfeed.user.service.UserService;
@@ -30,7 +31,7 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDto request) {
 
-        User user = userService.findByEmail(request.getEmail()); // 로그인 요청에서 받은 이메일로 DB에서 유저를 찾아옴
+        User user = userService.findEntityByEmail(request.getEmail()); // 로그인 요청에서 받은 이메일로 DB에서 유저를 찾아옴
 
         // 입력된 비밀번호와 DB에 저장된 암호화된 비밀번호를 비교 >> 실패 시 예외 발생
         if (!userService.checkPassword(request.getPassword(), user.getPassword())) {
