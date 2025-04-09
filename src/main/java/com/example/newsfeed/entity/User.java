@@ -33,14 +33,30 @@ public class User extends BaseEntity {
 
     }
 
-    public User(String email, String password, String nickname, Character gender, String image) {
+    public User(String email, String password, String nickname, LocalDate birthDate,Character gender, String image) {
         this.email = email;
         this.password = password;
+        this.birthDate = birthDate;
         this.nickname = nickname;
         this.gender = gender;
         this.image = image;
         this.birthDate = LocalDate.now();
     }
+    public void updatePassword(String password) {
+        this.password = password;
+    }
 
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
 
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 }
+
+
