@@ -1,9 +1,10 @@
-package com.example.newsfeed.board;
+package com.example.newsfeed.board.service;
 
 import com.example.newsfeed.UserRepository;
 import com.example.newsfeed.UserResponseDto;
 import com.example.newsfeed.board.dto.BoardRequestDto;
 import com.example.newsfeed.board.dto.BoardResponseDto;
+import com.example.newsfeed.board.repository.BoardRepository;
 import com.example.newsfeed.entity.Board;
 import com.example.newsfeed.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class BoardServiceImpl implements BoardService{
+public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
 

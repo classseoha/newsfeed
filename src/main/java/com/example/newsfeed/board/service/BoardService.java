@@ -1,4 +1,4 @@
-package com.example.newsfeed.board;
+package com.example.newsfeed.board.service;
 
 import com.example.newsfeed.UserResponseDto;
 import com.example.newsfeed.board.dto.BoardRequestDto;

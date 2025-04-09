@@ -1,6 +1,7 @@
-package com.example.newsfeed.board;
+package com.example.newsfeed.board.controller;
 
 import com.example.newsfeed.UserResponseDto;
+import com.example.newsfeed.board.service.BoardService;
 import com.example.newsfeed.board.dto.BoardRequestDto;
 import com.example.newsfeed.board.dto.BoardResponseDto;
 import lombok.RequiredArgsConstructor;
