@@ -14,6 +14,7 @@ public class UserResponseDto {
     private final Character gender;
     private final String image;
 
+
     public UserResponseDto(String email, String nickname, LocalDate birthDate, Character gender, String image) {
         this.email = email;
         this.nickname = nickname;

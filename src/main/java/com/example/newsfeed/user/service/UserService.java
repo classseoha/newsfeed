@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 //회원가입 User 서비스 구현
@@ -32,6 +33,7 @@ public class UserService {
         String nickname = requestDto.getNickname();
         Character gender = requestDto.getGender();
         String image = requestDto.getImage();
+        LocalDate birthDate = requestDto.getBirthDate();
 
         if(email == null || email.isBlank() || !email.contains("@")){
             throw new IllegalArgumentException("유효한 이메일을 입력해주세요.");
@@ -48,7 +50,7 @@ public class UserService {
 
 
 
-        User user = new User(email, password, nickname, gender, image);
+        User user = new User(email, password, nickname, birthDate, gender, image);
 
         User savedUser = userRepository.save(user);
         return new SignUpResponseDto(
@@ -116,4 +118,14 @@ public class UserService {
         user.setBirthDate(requestDto.getBirthday());
     }
 
+    //회원탈퇴
+    @Transactional
+    public void delete(String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()->new IllegalArgumentException("유저 없음"));
+        userRepository.delete(user);
+        userRepository.flush();
+
+    }
 }

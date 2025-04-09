@@ -20,16 +20,16 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // 🔥 모두 허용
-                )
-                .formLogin(login -> login.disable())
-                .httpBasic(Customizer.withDefaults());
+        http.csrf(csrf -> csrf.disable());
+
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.POST, "/User/signUp").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/User/**").permitAll()   // 회원정보 수정 허용
+                .requestMatchers(HttpMethod.PATCH, "/User/**").permitAll() // 비밀번호 수정도 허용
+                .anyRequest().permitAll() // 나머지도 허용 (개발 중이라면 이렇게 해도 됨)
+        );
         return http.build();
     }
-
 
 
 }

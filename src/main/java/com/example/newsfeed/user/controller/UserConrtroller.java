@@ -61,4 +61,11 @@ public class UserConrtroller {
         userService.updateUser(email, requestDto);
         return ResponseEntity.ok("회원 정보가 수정되었습니다.");
     }
+
+    @DeleteMapping("/{email}")
+    public ResponseEntity<String> deleteUser(@PathVariable("email") String email) {
+            userService.delete(email);
+
+            return ResponseEntity.ok("회원 탈퇴 완료 되었습니다.");
+        }
 }
