@@ -59,7 +59,7 @@ public class BoardController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
 
-        BoardResponseDto boardById = boardService.findBoardById(id);
+        BoardResponseDto boardById = boardService.findBoardById(id, email);
 
         return new ResponseEntity<>(boardById, HttpStatus.OK);
     }

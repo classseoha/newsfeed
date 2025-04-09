@@ -9,7 +9,7 @@ import java.util.List;
 public interface BoardService {
     BoardResponseDto createBoard(BoardRequestDto boardRequestDto);
 
-    BoardResponseDto findBoardById(Long id);
+    BoardResponseDto findBoardById(Long id, String email);
 
     BoardResponseDto updateBoard(BoardRequestDto boardRequestDto, Long id, String email);
 

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,9 +48,10 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public List<BoardResponseDto> findAllBoardsByMeAndFriends(String email) {
 
-        List<User> friendList = relationRepository.findFriends(email);
+        List<User> friendList = new ArrayList<>();
+//        List<User> friendList = relationRepository.findFriends(email);
 
-        User me = userRepository.findUserByEmailOrElseThrow(email);
+        User me = userRepository.findByIdOrElseThrow(email);
 
         friendList.add(me);
 
@@ -59,15 +61,16 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public BoardResponseDto findBoardById(Long id) {
+    public BoardResponseDto findBoardById(Long id, String email) {
 
-        List<User> friendList = relationRepository.findFriends(email);
+
+//        List<User> friendList = relationRepository.findFriends(email);
 
         Board findBoardById = boardRepository.findBoardByIdOrElseThrow(id);
 
-        if(!friendList.contains(findBoardById.getUser())){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
+//        if(!friendList.contains(findBoardById.getUser())){
+//            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+//        }
 
         return new BoardResponseDto(findBoardById) ;
     }
