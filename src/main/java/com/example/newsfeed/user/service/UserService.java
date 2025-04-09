@@ -103,8 +103,7 @@ public class UserService {
                 .orElseThrow(()-> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
 
         user.setNickname(requestDto.getNickname());
-        user.setImage(requestDto.getImage());
-        user.setBirthDate(requestDto.getBirthday());
+//        user.setImage(requestDto.getImage());
     }
 
     //회원탈퇴
