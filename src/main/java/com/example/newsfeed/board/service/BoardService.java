@@ -13,7 +13,7 @@ public interface BoardService {
 
     BoardResponseDto updateBoard(BoardRequestDto boardRequestDto, Long id, String email);
 
-    void deleteBoard(Long id);
+    void deleteBoard(Long id, String email);
 
     List<BoardResponseDto> findAllBoardsByMeAndFriends(String email);
 }

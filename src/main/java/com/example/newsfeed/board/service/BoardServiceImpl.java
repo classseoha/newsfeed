@@ -79,7 +79,7 @@ public class BoardServiceImpl implements BoardService {
         Board findBoardById = boardRepository.findBoardByIdOrElseThrow(id);
 
         if(!findBoardById.getUser().getEmail().equals(email)){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "작성자만 수정이 가능합니다.");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Modifications are permitted only by the original author.");
         }
 
         if(boardRequestDto.getTitle() != null){
@@ -98,11 +98,15 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public void deleteBoard(Long id) {
+    public void deleteBoard(Long id, String email) {
 
-        Board board = boardRepository.findBoardByIdOrElseThrow(id);
+        Board findBoardById = boardRepository.findBoardByIdOrElseThrow(id);
 
-        boardRepository.delete(board);
+        if(!findBoardById.getUser().getEmail().equals(email)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Deletion is permitted only for the original author.");
+        }
+
+        boardRepository.delete(findBoardById);
 
     }
 
