@@ -42,5 +42,19 @@ public class User extends BaseEntity {
         this.birthDate = LocalDate.now();
     }
 
+    public void updatePassword(String password) {
+        this.password = password;
+    }
 
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 }

@@ -1,8 +1,6 @@
 package com.example.newsfeed.user.controller;
 
-import com.example.newsfeed.user.dto.SignUpRequestDto;
-import com.example.newsfeed.user.dto.SignUpResponseDto;
-import com.example.newsfeed.user.dto.UserResponseDto;
+import com.example.newsfeed.user.dto.*;
 import com.example.newsfeed.user.entity.User;
 import com.example.newsfeed.user.service.UserRepository;
 import com.example.newsfeed.user.service.UserService;
@@ -40,17 +38,27 @@ public class UserConrtroller {
     }
 
     //마이페이지
-    @GetMapping("/{mypage}")
-    public ResponseEntity<UserResponseDto> findByPage(HttpSession session) throws IllegalAccessException {
+    @GetMapping("/mypage")
+    public ResponseEntity<UserResponseDto> findByPage(@RequestParam String email)  {
 
-        String email = (String) session.getAttribute("email");
+    UserResponseDto userResponseDto = userService.findByEmail(email);
+        return ResponseEntity.ok(userResponseDto);
+    }
 
-        if(email == null){
-            throw new IllegalAccessException("로그인이 필요합니다.");
-        }
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalAccessException("해당 이메일의 유저가 없습니다."));
+    //비밀번호 수정
+    @PatchMapping("/{email:.+}")
+    public ResponseEntity<Void> updatePassword(
+            @PathVariable("email") String email,
+            @RequestBody UpdatePasswordRequestDto requestDto
+            ){
+        userService.updatePassword(email, requestDto.getOldPassword(), requestDto.getNewPassword());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
-        return ResponseEntity.ok(new UserResponseDto(user));
+    //회원정보 수정
+    @PutMapping("/{email}")
+    public ResponseEntity<String> updateUser(@PathVariable String email, @RequestBody UpdateUserResquestDto requestDto) {
+        userService.updateUser(email, requestDto);
+        return ResponseEntity.ok("회원 정보가 수정되었습니다.");
     }
 }
