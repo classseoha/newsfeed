@@ -1,11 +1,11 @@
 package com.example.newsfeed.user.service;
 
+import com.example.newsfeed.entity.User;
 import com.example.newsfeed.user.dto.SignUpRequestDto;
 import com.example.newsfeed.user.dto.SignUpResponseDto;
 import com.example.newsfeed.user.dto.UpdateUserResquestDto;
 import com.example.newsfeed.user.dto.UserResponseDto;
-
-import com.example.newsfeed.entity.User;
+import com.example.newsfeed.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 //회원가입 User 서비스 구현
 
@@ -23,7 +22,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-//    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     //회원가입
     public SignUpResponseDto signup(SignUpRequestDto requestDto)
@@ -62,19 +61,6 @@ public class UserService {
         );
     }
 
-    //회원조회
-    public UserResponseDto findById(long id) {
-
-        Optional<User> optionalUser = userRepository.findById(id);
-
-        if(optionalUser.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exists id : " + id);
-        }
-        User findUser = optionalUser.get();
-
-        return new UserResponseDto(findUser.getEmail(), findUser.getNickname(),findUser.getBirthDate(),findUser.getGender(),findUser.getImage());
-    }
-
     //마이페이지조회
     public UserResponseDto findByEmail(String email) {
 
@@ -91,9 +77,9 @@ public class UserService {
 //                .orElseThrow(() -> new IllegalArgumentException("해당 이메일의 유저가 없습니다."));
 //    }
 
-//    public boolean checkPassword(String reqPassword, String endcodePassword){
-//        return passwordEncoder.matches(reqPassword, endcodePassword);
-//    }
+    public boolean checkPassword(String rawPassword, String encodedPassword){
+        return passwordEncoder.matches(rawPassword, encodedPassword);
+    }
 
     //비밀번호 수정
     @Transactional
@@ -127,5 +113,11 @@ public class UserService {
         userRepository.delete(user);
         userRepository.flush();
 
+    }
+
+    // 추가: 엔티티 그대로 반환
+    public User findEntityByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("해당 유저가 없습니다."));
     }
 }

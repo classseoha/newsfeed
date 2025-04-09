@@ -1,8 +1,7 @@
 package com.example.newsfeed.user.controller;
 
 import com.example.newsfeed.user.dto.*;
-import com.example.newsfeed.user.entity.User;
-import com.example.newsfeed.user.service.UserRepository;
+import com.example.newsfeed.user.repository.UserRepository;
 import com.example.newsfeed.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/User")
 @RequiredArgsConstructor
-public class UserConrtroller {
+public class UserController {
 
     private final UserService userService;
     private final UserRepository userRepository;
