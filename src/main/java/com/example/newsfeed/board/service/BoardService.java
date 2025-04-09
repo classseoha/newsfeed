@@ -1,8 +1,8 @@
 package com.example.newsfeed.board.service;
 
-import com.example.newsfeed.UserResponseDto;
 import com.example.newsfeed.board.dto.BoardRequestDto;
 import com.example.newsfeed.board.dto.BoardResponseDto;
+import com.example.newsfeed.board.dto.UserResponseDtoBoardTest;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ public interface BoardService {
 
     BoardResponseDto findBoardById(Long id, String email);
 
-    UserResponseDto findBoardCreatorById(Long id);
+    UserResponseDtoBoardTest findBoardCreatorById(Long id);
 
     BoardResponseDto updateBoard(BoardRequestDto boardRequestDto, Long id);
 

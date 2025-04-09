@@ -1,6 +1,6 @@
 package com.example.newsfeed.board.controller;
 
-import com.example.newsfeed.UserResponseDto;
+import com.example.newsfeed.board.dto.UserResponseDtoBoardTest;
 import com.example.newsfeed.board.service.BoardService;
 import com.example.newsfeed.board.dto.BoardRequestDto;
 import com.example.newsfeed.board.dto.BoardResponseDto;
@@ -70,7 +70,7 @@ public class BoardController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
 
-        UserResponseDto boardCreatorById = boardService.findBoardCreatorById(id);
+        UserResponseDtoBoardTest boardCreatorById = boardService.findBoardCreatorById(id);
 
         if(!boardCreatorById.getEmail().equals(email)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);

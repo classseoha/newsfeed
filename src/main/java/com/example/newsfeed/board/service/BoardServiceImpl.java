@@ -1,12 +1,12 @@
 package com.example.newsfeed.board.service;
 
-import com.example.newsfeed.UserRepository;
-import com.example.newsfeed.UserResponseDto;
 import com.example.newsfeed.board.dto.BoardRequestDto;
 import com.example.newsfeed.board.dto.BoardResponseDto;
 import com.example.newsfeed.board.repository.BoardRepository;
 import com.example.newsfeed.entity.Board;
 import com.example.newsfeed.entity.User;
+import com.example.newsfeed.friends.repository.RelationRepository;
+import com.example.newsfeed.user.service.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
