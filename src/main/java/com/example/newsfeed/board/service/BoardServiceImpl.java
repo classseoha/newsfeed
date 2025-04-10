@@ -65,6 +65,10 @@ public class BoardServiceImpl implements BoardService {
 
         List<User> friendList = getFriendList(email);
 
+        User me = userRepository.findByIdOrElseThrow(email);
+
+        friendList.add(me);
+
         Board findBoardById = boardRepository.findBoardByIdOrElseThrow(id);
 
         if(!friendList.contains(findBoardById.getUser())){
