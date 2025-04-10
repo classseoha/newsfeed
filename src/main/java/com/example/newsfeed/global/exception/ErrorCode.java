@@ -34,7 +34,7 @@ public enum ErrorCode {
 
     // Board
     BOARD_NOT_FOUND(404, "Not Found", "B001", "Board Not Found"),
-    CONSTRAINT_VIOLATION(409, "	Conflict", "B002", "Mandatory input not entered");
+    CONSTRAINT_VIOLATION(409, "Conflict", "B002", "Mandatory input not entered");
 
     private final int status;
     private final String error;
