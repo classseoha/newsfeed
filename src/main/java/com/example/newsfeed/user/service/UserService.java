@@ -47,6 +47,11 @@ public class UserService {
             throw new IllegalArgumentException("닉네임을 입력해주세요 .");
         }
 
+        if(birthDate == null) {
+            throw new IllegalArgumentException("생년월일을 입력해주세요.");
+        }
+
+
 
 
         User user = new User(email, password, nickname, birthDate, gender, image);

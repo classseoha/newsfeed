@@ -18,6 +18,7 @@ public enum ErrorCode {
     EMAIL_DUPLICATION(400, "Bad Request", "U001", "Email is Duplicated"),
     USER_NOT_FOUND(404, "Not Found", "U002", "User Not Found"),
 
+
     // Schedule
     SCHEDULE_NOT_FOUND(404, "Not Found", "S001", "Schedule Not Found");
 

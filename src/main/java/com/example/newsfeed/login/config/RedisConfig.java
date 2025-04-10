@@ -2,6 +2,7 @@ package com.example.newsfeed.login.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -22,6 +23,7 @@ public class RedisConfig {
 
     // Redis에서 Key-Value 형태로 데이터를 저장하거나 읽어오는 도구
     @Bean
+    @Primary
     public RedisTemplate<String, String> redisTemplate() {
 
         RedisTemplate<String, String> template = new RedisTemplate<>();
