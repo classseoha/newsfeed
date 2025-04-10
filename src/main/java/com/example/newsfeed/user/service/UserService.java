@@ -89,11 +89,19 @@ public class UserService {
     public void updatePassword(String email, String oldPassword, String newPassword) {
         User findUser = userRepository.findByIdOrElseThrow(email);
 
-       if(!findUser.getPassword().equals(oldPassword)){
-           throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"비밀번호가 일치하지 않습니다.");
-       }
+//        if(!findUser.getPassword().equals(oldPassword)){
+//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"비밀번호가 일치하지 않습니다.");
+//        }
 
-       findUser.updatePassword(newPassword);
+        if(!passwordEncoder.matches(findUser.getPassword(), oldPassword)){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"비밀번호가 일치하지 않습니다.");
+        }
+
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        // 저장된 정보 즉 getPassword()로 부터 받아오는 정보는 인코딩된 정보이므로 여기서는 equals가 이는 matches를 사용해야 합니다.
+        // 추가로 newPassword도 인코딩하는 것이 필요 합니다.
+
+        findUser.updatePassword(encodedPassword);
     }
 
     //회원정보수정
