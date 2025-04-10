@@ -24,6 +24,9 @@ public class BoardResponseDto {
 
     private LocalDateTime updatedAt;
 
+    public BoardResponseDto() {
+    }
+
     public BoardResponseDto(Board board) {
         this.id = board.getId();
         this.title = board.getTitle();

@@ -17,6 +17,9 @@ public class BoardRequestDto {
     @Setter
     private String email;
 
+    public BoardRequestDto() {
+    }
+
     public BoardRequestDto(String title, String contents, String image) {
         this.title = title;
         this.contents = contents;
