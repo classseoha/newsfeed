@@ -7,10 +7,12 @@ import com.example.newsfeed.user.dto.UpdateUserResquestDto;
 import com.example.newsfeed.user.dto.UserResponseDto;
 import com.example.newsfeed.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 
@@ -63,9 +65,7 @@ public class UserService {
     //마이페이지조회
     public UserResponseDto findByEmail(String email) {
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new AuthenticationException("해당 이메일의 유저가 존재하지 않습니다.") {
-                });
+        User user = userRepository.findByIdOrElseThrow(email);
 
         return new UserResponseDto(user);
     }
@@ -83,7 +83,7 @@ public class UserService {
 
         // 입력된 비밀번호와 DB에 저장된 암호화된 비밀번호를 비교 >> 실패 시 예외 발생
         if (!passwordEncoder.matches(oldPassword, findUser.getPassword())) {
-            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다.");
         }
 
         findUser.updatePassword(passwordEncoder.encode(newPassword));
