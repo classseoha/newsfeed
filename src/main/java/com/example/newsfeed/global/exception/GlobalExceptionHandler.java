@@ -1,7 +1,6 @@
 package com.example.newsfeed.global.exception;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -15,12 +14,9 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestControllerAdvice  // 모든 컨트롤러에 적용되는 글로벌 예외 핸들러
@@ -116,23 +112,6 @@ public class GlobalExceptionHandler {
         log.error("HttpMessageNotReadableException: {}", e.getMessage());
         ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, "요청 본문을 파싱할 수 없습니다.");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(ResponseStatusException.class)
-    protected ResponseEntity<Object> handleResponseStatusException(ResponseStatusException e, HttpServletRequest request) {
-        log.error("ResponseStatusException: {}", e.getMessage());
-
-        HttpStatus status = HttpStatus.valueOf(e.getStatusCode().value());
-
-        Map<String, Object> errorBody = new LinkedHashMap<>();
-        errorBody.put("status", status.value());
-        errorBody.put("error", status.getReasonPhrase());  // 여기!
-        errorBody.put("message", e.getReason());           // 사용자 메시지
-        errorBody.put("path", request.getRequestURI());
-
-        return ResponseEntity
-                .status(status)
-                .body(errorBody);
     }
 
     /**
