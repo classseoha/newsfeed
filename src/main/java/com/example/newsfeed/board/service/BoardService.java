@@ -2,8 +2,7 @@ package com.example.newsfeed.board.service;
 
 import com.example.newsfeed.board.dto.BoardRequestDto;
 import com.example.newsfeed.board.dto.BoardResponseDto;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 public interface BoardService {
     BoardResponseDto createBoard(BoardRequestDto boardRequestDto);
@@ -14,5 +13,5 @@ public interface BoardService {
 
     void deleteBoard(Long id, String email);
 
-    List<BoardResponseDto> findAllBoardsByMeAndFriends(String email);
+    Page<BoardResponseDto> findAllBoardsByMeAndFriends(String email, Integer page, Integer size);
 }

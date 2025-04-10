@@ -2,6 +2,8 @@ package com.example.newsfeed.board.repository;
 
 import com.example.newsfeed.entity.Board;
 import com.example.newsfeed.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -13,5 +15,5 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
         return findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    List<Board> findByUserInOrderByModifiedAtDesc(List<User> userList);
+    Page<Board> findByUserIn(List<User> userList, Pageable pageable);
 }
