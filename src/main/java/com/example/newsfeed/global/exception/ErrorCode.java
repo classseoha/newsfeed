@@ -18,11 +18,11 @@ public enum ErrorCode {
     EMAIL_DUPLICATION(400, "Bad Request", "U001", "Email is Duplicated"),
     USER_NOT_FOUND(404, "Not Found", "U002", "User Not Found"),
 
-    //schedule
-    SCHEDULE_NOT_FOUND(404, "Not Found", "U002", "User Not Found");
+    // Schedule
+    SCHEDULE_NOT_FOUND(404, "Not Found", "S001", "Schedule Not Found");
 
     private final int status;
     private final String error;
-    private final String code;
-    private final String message;
+    private final String code; // 개발자 또는 프론트엔드가 사용할 비즈니스 식별 코드 (ex. "C001": 공통 에러 / "U001": 사용자 관련 에러 / "S001" 등으로 더 확장 가능)
+    private final String message; // 사용자나 개발자에게 보여줄 에러 메시지
 }

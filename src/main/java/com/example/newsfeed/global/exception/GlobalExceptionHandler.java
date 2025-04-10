@@ -23,7 +23,9 @@ import java.util.List;
 public class GlobalExceptionHandler {
 
     /**
-     * Custom Exception 처리 - Service 계층에서 발생한 비즈니스 예외 처리
+     * 사용자가 직접 정의한 Custom Exception 처리 (Service 계층에서 발생한 비즈니스 예외 처리)
+     * ErrorCode는 예외에 대한 HTTP 상태 코드와 메시지 정보를 갖고 있는 Enum
+     * 해당 예외가 발생하면 로그를 찍고, 일관된 ErrorResponse 형태로 응답
      */
     @ExceptionHandler(CustomException.class)
     protected ResponseEntity<ErrorResponse> handleCustomException(CustomException e) {
@@ -34,19 +36,20 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Valid 예외 처리 - Controller의 @Valid 검증 실패 시 발생
+     * Valid 예외 처리 - Controller의 @Valid 또는 @Validated 어노테이션으로 유효성 검증을 할 때, 실패하면 이 예외가 발생
      * 컨트롤러에서 개별적으로 처리하지 않은 경우에만 여기서 처리됨
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.error("MethodArgumentNotValidException: {}", e.getMessage());
-        List<ErrorResponse.FieldError> fieldErrors = processFieldErrors(e.getBindingResult());
+        List<ErrorResponse.FieldError> fieldErrors = processFieldErrors(e.getBindingResult()); //processFieldErrors()로 필드 에러들을 가공해서 ErrorResponse로 만들어 응답, BindingResult를 통해 어떤 필드가 왜 실패했는지 정보 들어있음
         ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, fieldErrors);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     /**
      * Repository(JPA) 계층 예외 처리 - EntityNotFoundException 처리
+     * JPA에서 findById().orElseThrow() 같은 메서드에서 엔티티가 없을 때 발생 >> 404 응답을 보내도록 처리
      */
     @ExceptionHandler(EntityNotFoundException.class)
     protected ResponseEntity<ErrorResponse> handleEntityNotFoundException(EntityNotFoundException e) {
@@ -58,6 +61,7 @@ public class GlobalExceptionHandler {
     /**
      * Repository(JPA) 계층 예외 처리 - DataAccessException 처리
      * (SQL 예외, Lock 획득 실패 등 DB 관련 예외)
+     * Spring Data JPA에서 DB와 관련된 문제가 생기면 발생 >> 내부 서버 오류(500)로 응답
      */
     @ExceptionHandler(DataAccessException.class)
     protected ResponseEntity<ErrorResponse> handleDataAccessException(DataAccessException e) {
@@ -68,6 +72,7 @@ public class GlobalExceptionHandler {
 
     /**
      * 지원하지 않는 HTTP 메소드 호출 시 발생하는 예외 처리
+     * 지원하지 않는 HTTP 메서드로 요청이 들어올 때 발생 (예: POST만 가능한데 GET으로 요청한 경우) >> 405 응답
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     protected ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
@@ -78,6 +83,7 @@ public class GlobalExceptionHandler {
 
     /**
      * 요청 파라미터 타입 불일치 예외 처리
+     * URL에 있는 파라미터 타입이 다를 때 발생 (예: id=abc인데, Long 타입을 기대한 경우) >> 400 응답
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     protected ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
@@ -88,6 +94,7 @@ public class GlobalExceptionHandler {
 
     /**
      * 필수 요청 파라미터 누락 예외 처리
+     * 필수 요청 파라미터가 누락되었을 때 발생 (예: @RequestParam이 빠진 경우) >> 400 응답
      */
     @ExceptionHandler(MissingServletRequestParameterException.class)
     protected ResponseEntity<ErrorResponse> handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
@@ -98,6 +105,7 @@ public class GlobalExceptionHandler {
 
     /**
      * JSON 파싱 오류 등의 예외 처리
+     * JSON 파싱이 실패할 때 발생 (예: 잘못된 JSON, 타입 불일치 등) >> 400 응답
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     protected ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
@@ -118,6 +126,7 @@ public class GlobalExceptionHandler {
 
     /**
      * BindingResult 에서 발생한 필드 에러 목록을 ErrorResponse.FieldError 목록으로 반환
+     * @Valid 실패 시 어떤 필드가 어떤 이유로 실패했는지 정리 >> 이 정보를 클라이언트에 넘겨서 어떤 필드가 잘못됐는지 쉽게 알 수 있게 함
      */
     private List<ErrorResponse.FieldError> processFieldErrors(BindingResult bindingResult) {
         List<ErrorResponse.FieldError> fieldErrors = new ArrayList<>();
