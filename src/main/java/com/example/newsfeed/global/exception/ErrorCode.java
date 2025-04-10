@@ -21,6 +21,17 @@ public enum ErrorCode {
     UNAUTHORIZED_USER(403, "FORBIDDEN", "U003", "Unauthorized User"),
     TOKEN_NOT_VALID(401, "Unauthorized", "U004", "Unauthorized User"),
 
+    // Schedule
+    SCHEDULE_NOT_FOUND(404, "Not Found", "S001", "Schedule Not Found"),
+
+    // Friend
+    SELF_FRIEND_REQUEST(400, "Bad Request", "F001", "본인에게 친구 요청을 보낼 수 없습니다."),
+    FRIEND_REQUEST_ALREADY_SENT(409, "Conflict", "F002", "이미 친구 요청을 보냈습니다."),
+    FRIEND_REQUEST_SAVE_FAILED(500, "Server Error", "F003", "친구 요청 저장 중 오류가 발생했습니다."),
+    FRIEND_LIST_EMPTY(204, "No Content", "F004", "친구가 없습니다."),
+    INVALID_RELATION_STATE(400, "Bad Request", "F005", "친구 관계가 올바르지 않습니다."),
+    FRIEND_LIST_FETCH_FAILED(500, "Server Error", "F006", "친구 목록을 조회하는 도중 오류가 발생했습니다."),
+
     // Board
     BOARD_NOT_FOUND(404, "Not Found", "B001", "Board Not Found"),
     CONSTRAINT_VIOLATION(409, "	Conflict", "B002", "Mandatory input not entered");
