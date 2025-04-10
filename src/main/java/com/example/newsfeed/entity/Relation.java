@@ -20,12 +20,12 @@ public class Relation {
 
     @Setter
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "following_email")
     private User followingEmail;
 
     @Setter
     @ManyToOne
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @JoinColumn(name = "followed_email")
     private User followedEmail;
 
 

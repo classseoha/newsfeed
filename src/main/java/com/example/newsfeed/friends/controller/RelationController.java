@@ -1,7 +1,5 @@
 package com.example.newsfeed.friends.controller;
 
-import com.example.newsfeed.board.dto.BoardResponseDto;
-import com.example.newsfeed.friends.dto.RelationRequestDto;
 import com.example.newsfeed.friends.dto.RelationResponseDto;
 import com.example.newsfeed.friends.service.RelationService;
 import lombok.RequiredArgsConstructor;
@@ -31,9 +29,13 @@ public class RelationController {
         return new ResponseEntity<>(friends, HttpStatus.OK);
     }
 
-    @PostMapping("/relations")
-    public ResponseEntity<String> sendFriendRequest(@RequestParam RelationRequestDto relationRequestDto) {
-        relationService.sendFriendRequest(relationRequestDto.getEmail(), relationRequestDto.getTargetEmail());
+    @PostMapping
+    public ResponseEntity<String> sendFriendRequest(@RequestParam String email) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String myEmail = authentication.getName();
+
+        relationService.sendFriendRequest(myEmail, email);
         return ResponseEntity.ok("친구 요청이 전송되었습니다.");
     }
 }
