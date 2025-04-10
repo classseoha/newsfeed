@@ -1,6 +1,7 @@
-package com.example.newsfeed.login;
+package com.example.newsfeed.login.controller;
 
 import com.example.newsfeed.entity.User;
+import com.example.newsfeed.login.JwtTokenProvider;
 import com.example.newsfeed.login.dto.LoginRequestDto;
 import com.example.newsfeed.login.dto.LoginResponseDto;
 import com.example.newsfeed.user.service.UserService;

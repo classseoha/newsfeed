@@ -93,8 +93,8 @@ public class UserService {
 //            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"비밀번호가 일치하지 않습니다.");
 //        }
 
-        if(!passwordEncoder.matches(findUser.getPassword(), oldPassword)){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"비밀번호가 일치하지 않습니다.");
+        if(!passwordEncoder.matches(oldPassword, findUser.getPassword())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"비밀번호가 일치하지 않습니다.");
         }
 
         String encodedPassword = passwordEncoder.encode(newPassword);
