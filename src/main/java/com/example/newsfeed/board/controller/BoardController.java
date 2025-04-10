@@ -3,17 +3,13 @@ package com.example.newsfeed.board.controller;
 import com.example.newsfeed.board.service.BoardService;
 import com.example.newsfeed.board.dto.BoardRequestDto;
 import com.example.newsfeed.board.dto.BoardResponseDto;
-import com.example.newsfeed.user.dto.UserResponseDto;
-import com.example.newsfeed.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,8 +17,6 @@ import java.util.List;
 public class BoardController {
 
     private final BoardService boardService;
-
-    private final UserService userService;
 
     // 게시글 생성
     @PostMapping
@@ -41,12 +35,15 @@ public class BoardController {
 
     //뉴스피드 조회
     @GetMapping
-    public ResponseEntity<List<BoardResponseDto>> findAllBoardsByMeAndFriends(){
+    public ResponseEntity<Page<BoardResponseDto>> findAllBoardsByMeAndFriends(
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
 
-        List<BoardResponseDto> allBoardsByMeAndFriends = boardService.findAllBoardsByMeAndFriends(email);
+        Page<BoardResponseDto> allBoardsByMeAndFriends = boardService.findAllBoardsByMeAndFriends(email, page, size);
 
         return new ResponseEntity<>(allBoardsByMeAndFriends, HttpStatus.OK);
     }

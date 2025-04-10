@@ -9,6 +9,9 @@ import com.example.newsfeed.entity.User;
 import com.example.newsfeed.friends.repository.RelationRepository;
 import com.example.newsfeed.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +50,11 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public List<BoardResponseDto> findAllBoardsByMeAndFriends(String email) {
+    public Page<BoardResponseDto> findAllBoardsByMeAndFriends(String email, Integer page, Integer size) {
+
+        int adjustedPage = (page > 0) ? page - 1 : 0;
+
+        PageRequest pageable = PageRequest.of(adjustedPage, size, Sort.by("modifiedAt").descending());
 
         List<User> friendList = getFriendList(email);
 
@@ -55,9 +62,9 @@ public class BoardServiceImpl implements BoardService {
 
         friendList.add(me);
 
-        List<Board> findBoardList = boardRepository.findByUserInOrderByModifiedAtDesc(friendList);
+        Page<Board> boards = boardRepository.findByUserIn(friendList, pageable);
 
-        return findBoardList.stream().map(BoardResponseDto::new).toList();
+        return boards.map(BoardResponseDto::new);
     }
 
     @Override
