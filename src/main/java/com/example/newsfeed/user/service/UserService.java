@@ -1,10 +1,10 @@
 package com.example.newsfeed.user.service;
 
-import com.example.newsfeed.entity.User;
 import com.example.newsfeed.user.dto.SignUpRequestDto;
 import com.example.newsfeed.user.dto.SignUpResponseDto;
 import com.example.newsfeed.user.dto.UpdateUserResquestDto;
 import com.example.newsfeed.user.dto.UserResponseDto;
+import com.example.newsfeed.entity.User;
 import com.example.newsfeed.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -49,12 +49,9 @@ public class UserService {
 
 
 
-        // 비밀번호 암호화
-        String encodedPassword = passwordEncoder.encode(password);
+        User user = new User(email, password, nickname, birthDate, gender, image);
 
-        User user = new User(email, encodedPassword, nickname, birthDate, gender, image);
         User savedUser = userRepository.save(user);
-
         return new SignUpResponseDto(
                 savedUser.getEmail(),
                 savedUser.getNickname(),
@@ -67,18 +64,13 @@ public class UserService {
     //마이페이지조회
     public UserResponseDto findByEmail(String email) {
 
-       User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("해당 이메일의 유저가 존재하지 않습니다."));
 
         return new UserResponseDto(user);
 
 
     }
-
-//    public User findByEmail2(String email){
-//        return userRepository.findByEmail(email)
-//                .orElseThrow(() -> new IllegalArgumentException("해당 이메일의 유저가 없습니다."));
-//    }
 
     public boolean checkPassword(String rawPassword, String encodedPassword){
         return passwordEncoder.matches(rawPassword, encodedPassword);
@@ -89,19 +81,11 @@ public class UserService {
     public void updatePassword(String email, String oldPassword, String newPassword) {
         User findUser = userRepository.findByIdOrElseThrow(email);
 
-//        if(!findUser.getPassword().equals(oldPassword)){
-//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"비밀번호가 일치하지 않습니다.");
-//        }
-
-        if(!passwordEncoder.matches(oldPassword, findUser.getPassword())){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"비밀번호가 일치하지 않습니다.");
+        if(!findUser.getPassword().equals(oldPassword)){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"비밀번호가 일치하지 않습니다.");
         }
 
-        String encodedPassword = passwordEncoder.encode(newPassword);
-        // 저장된 정보 즉 getPassword()로 부터 받아오는 정보는 인코딩된 정보이므로 여기서는 equals가 이는 matches를 사용해야 합니다.
-        // 추가로 newPassword도 인코딩하는 것이 필요 합니다.
-
-        findUser.updatePassword(encodedPassword);
+        findUser.updatePassword(newPassword);
     }
 
     //회원정보수정
@@ -111,7 +95,6 @@ public class UserService {
                 .orElseThrow(()-> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
 
         user.setNickname(requestDto.getNickname());
-//        user.setImage(requestDto.getImage());
     }
 
     //회원탈퇴

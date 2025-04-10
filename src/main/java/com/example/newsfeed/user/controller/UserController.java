@@ -75,15 +75,15 @@ public class UserController {
         return ResponseEntity.ok("회원 정보가 수정되었습니다.");
     }
 
-    //회원탈퇴
-//    @DeleteMapping()
-//    public ResponseEntity<String> deleteUser(@RequestBody UpdateUserResquestDto requestDto) {
-//
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String email = authentication.getName();
-//
-//        userService.delete(email);
-//
-//        return ResponseEntity.ok("회원 탈퇴 완료되었습니다.");
-//        }
+//    회원탈퇴
+    @DeleteMapping()
+    public ResponseEntity<String> deleteUser(@RequestBody UpdateUserResquestDto requestDto) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        userService.delete(email);
+
+        return ResponseEntity.ok("회원 탈퇴 완료되었습니다.");
+        }
 }
