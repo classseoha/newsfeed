@@ -47,9 +47,9 @@ public class UserService {
             throw new IllegalArgumentException("닉네임을 입력해주세요 .");
         }
 
+        String encodedPassword = passwordEncoder.encode(password);
 
-
-        User user = new User(email, password, nickname, birthDate, gender, image);
+        User user = new User(email, encodedPassword, nickname, birthDate, gender, image);
 
         User savedUser = userRepository.save(user);
         return new SignUpResponseDto(

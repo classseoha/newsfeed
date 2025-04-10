@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -34,10 +35,14 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public BoardResponseDto createBoard(BoardRequestDto boardRequestDto) {
 
+        if(boardRequestDto.getContents() == null || boardRequestDto.getTitle() == null){
+            throw new IllegalArgumentException("입력값이 올바르지 않습니다.");
+        }
+
         Optional<User> userByEmail = userRepository.findUserByEmail(boardRequestDto.getEmail());
 
         if(userByEmail.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "사용자를 찾을 수 없습니다.");
         }
 
         Board board = new Board(boardRequestDto.getTitle(), boardRequestDto.getContents(), boardRequestDto.getImage());
@@ -53,6 +58,10 @@ public class BoardServiceImpl implements BoardService {
     public Page<BoardResponseDto> findAllBoardsByMeAndFriends(String email, Integer page, Integer size) {
 
         int adjustedPage = (page > 0) ? page - 1 : 0;
+
+        if(size < 0){
+            throw new IllegalArgumentException("잘못된 페이지 번호입니다.");
+        }
 
         PageRequest pageable = PageRequest.of(adjustedPage, size, Sort.by("modifiedAt").descending());
 
@@ -79,7 +88,7 @@ public class BoardServiceImpl implements BoardService {
         Board findBoardById = boardRepository.findBoardByIdOrElseThrow(id);
 
         if(!friendList.contains(findBoardById.getUser())){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            throw new AccessDeniedException("작성자의 친구가 아니라 접근이 불가능합니다.");
         }
 
         return new BoardResponseDto(findBoardById) ;
@@ -105,7 +114,7 @@ public class BoardServiceImpl implements BoardService {
         Board findBoardById = boardRepository.findBoardByIdOrElseThrow(id);
 
         if(!findBoardById.getUser().getEmail().equals(email)){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Modifications are permitted only by the original author.");
+            throw new AccessDeniedException("작성자만 수정할 수 있습니다.");
         }
 
         if(boardRequestDto.getTitle() != null){
@@ -129,7 +138,7 @@ public class BoardServiceImpl implements BoardService {
         Board findBoardById = boardRepository.findBoardByIdOrElseThrow(id);
 
         if(!findBoardById.getUser().getEmail().equals(email)){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Deletion is permitted only for the original author.");
+            throw new AccessDeniedException("작성자만 삭제할 수 있습니다.");
         }
 
         boardRepository.delete(findBoardById);
