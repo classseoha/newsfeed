@@ -13,10 +13,13 @@ public enum ErrorCode {
     ENTITY_NOT_FOUND(400, "Bad Request", "C003", "Entity Not Found"),
     INTERNAL_SERVER_ERROR(500, "Server Error", "C004", "Internal Server Error"),
     INVALID_TYPE_VALUE(400, "Bad Request", "C005", "Invalid Type Value"),
-    
+    EMPTY_CONTENTS(204, "No Content", "C006", "No contents"),
+
     // User
     EMAIL_DUPLICATION(400, "Bad Request", "U001", "Email is Duplicated"),
     USER_NOT_FOUND(404, "Not Found", "U002", "User Not Found"),
+    UNAUTHORIZED_USER(403, "FORBIDDEN", "U003", "Unauthorized User"),
+    TOKEN_NOT_VALID(401, "Unauthorized", "U004", "Unauthorized User"),
 
     // Schedule
     SCHEDULE_NOT_FOUND(404, "Not Found", "S001", "Schedule Not Found"),
@@ -27,7 +30,11 @@ public enum ErrorCode {
     FRIEND_REQUEST_SAVE_FAILED(500, "Server Error", "F003", "친구 요청 저장 중 오류가 발생했습니다."),
     FRIEND_LIST_EMPTY(204, "No Content", "F004", "친구가 없습니다."),
     INVALID_RELATION_STATE(400, "Bad Request", "F005", "친구 관계가 올바르지 않습니다."),
-    FRIEND_LIST_FETCH_FAILED(500, "Server Error", "F006", "친구 목록을 조회하는 도중 오류가 발생했습니다.");
+    FRIEND_LIST_FETCH_FAILED(500, "Server Error", "F006", "친구 목록을 조회하는 도중 오류가 발생했습니다."),
+
+    // Board
+    BOARD_NOT_FOUND(404, "Not Found", "B001", "Board Not Found"),
+    CONSTRAINT_VIOLATION(409, "	Conflict", "B002", "Mandatory input not entered");
 
     private final int status;
     private final String error;
