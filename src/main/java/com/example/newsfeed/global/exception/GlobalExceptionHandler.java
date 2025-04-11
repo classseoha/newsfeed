@@ -126,7 +126,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResponseStatusException.class)
     protected ResponseEntity<ErrorResponse> handleResponseStatusException(ResponseStatusException e) {
         log.error("ResponseStatusException: {}", e.getMessage());
-        ErrorResponse response = ErrorResponse.of(ErrorCode.USER_NOT_FOUND, "사용자를 찾을 수 없습니다");
+        ErrorResponse response = ErrorResponse.of(ErrorCode.USER_NOT_FOUND, "검색 결과를 찾을 수 없습니다");
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
