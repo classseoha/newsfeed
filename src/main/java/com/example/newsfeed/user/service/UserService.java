@@ -8,6 +8,7 @@ import com.example.newsfeed.entity.User;
 import com.example.newsfeed.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,9 +53,9 @@ public class UserService {
         }
 
 
+        String encodedPassword = passwordEncoder.encode(password);
 
-
-        User user = new User(email, password, nickname, birthDate, gender, image);
+        User user = new User(email, encodedPassword, nickname, birthDate, gender, image);
 
         User savedUser = userRepository.save(user);
         return new SignUpResponseDto(
@@ -69,8 +70,7 @@ public class UserService {
     //마이페이지조회
     public UserResponseDto findByEmail(String email) {
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("해당 이메일의 유저가 존재하지 않습니다."));
+        User user = userRepository.findByIdOrElseThrow(email);
 
         return new UserResponseDto(user);
 
@@ -86,11 +86,17 @@ public class UserService {
     public void updatePassword(String email, String oldPassword, String newPassword) {
         User findUser = userRepository.findByIdOrElseThrow(email);
 
-        if(!findUser.getPassword().equals(oldPassword)){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"비밀번호가 일치하지 않습니다.");
+        //1. 기존 비밀번호와 입력한 비밀번호가 다른지 확인.
+        if(!passwordEncoder.matches(oldPassword, findUser.getPassword())){
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        findUser.updatePassword(newPassword);
+        //2. 기존 비밀번호와 새 비밀번호가 같은 경우.
+        if (passwordEncoder.matches(newPassword, findUser.getPassword())) {
+            throw new IllegalArgumentException( "기존 비밀번호와 동일한 비밀번호입니다.");
+        }
+
+        findUser.updatePassword(passwordEncoder.encode(newPassword));
     }
 
     //회원정보수정
@@ -99,8 +105,15 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(()-> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
 
+
+        boolean isDuplicate = userRepository.existsByNickname(requestDto.getNickname());
+
+        if(isDuplicate && !user.getNickname().equals(requestDto.getNickname())){
+            throw new IllegalArgumentException("사용 중인 닉네임 입니다.");
+        }
         user.setNickname(requestDto.getNickname());
     }
+
 
     //회원탈퇴
     @Transactional

@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
     default Board findBoardByIdOrElseThrow(Long id){
-        return findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."));
     }
 
     Page<Board> findByUserIn(List<User> userList, Pageable pageable);

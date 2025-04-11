@@ -59,6 +59,7 @@ public class UserController {
             ){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("인증된 사용자 이름 ="+ authentication.getName());
         String email = authentication.getName();
 
         userService.updatePassword(email, requestDto.getOldPassword(), requestDto.getNewPassword());
