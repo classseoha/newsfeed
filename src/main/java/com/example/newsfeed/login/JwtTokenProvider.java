@@ -1,15 +1,17 @@
 package com.example.newsfeed.login;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 // JWT 관련 기능을 모아놓은 도우미 클래스 (JWT 생성, 해석, 유효성 검사, 만료시간 계산, 헤더에서 추출까지 모두 처리)
+@Slf4j
 @Component
 public class JwtTokenProvider {
 
@@ -47,15 +49,24 @@ public class JwtTokenProvider {
                 .getSubject(); // 우리가 토큰에 넣은 email
     }
 
-    // 토큰 유효성 검증 (서명 위조, 만료 등)
+    // 토큰 유효성 검증 (예외를 던지도록 변경)
     public boolean validateToken(String token) {
-
         try {
-            Jwts.parser().setSigningKey(secretKey.getBytes()).parseClaimsJws(token);
+            Jwts.parserBuilder()
+                    .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
+                    .build()
+                    .parseClaimsJws(token);
             return true;
-        } catch (Exception e) {
-            return false; // 유효하지 않으면(만료, 서명 위조, 형식 오류) false 반환
+        } catch (SecurityException | MalformedJwtException | SignatureException ex) {
+            log.warn("잘못된 JWT 서명입니다: {}", ex.getMessage());
+        } catch (ExpiredJwtException ex) {
+            log.warn("만료된 JWT 토큰입니다: {}", ex.getMessage());
+        } catch (UnsupportedJwtException ex) {
+            log.warn("지원되지 않는 JWT 토큰입니다: {}", ex.getMessage());
+        } catch (IllegalArgumentException ex) {
+            log.warn("JWT 토큰이 비었습니다: {}", ex.getMessage());
         }
+        return false;
     }
 
     // 로그아웃을 위한 토큰 만료시간 계산 메서드

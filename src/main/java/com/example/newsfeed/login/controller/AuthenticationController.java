@@ -47,9 +47,9 @@ public class AuthenticationController {
         // Redis에 해당 이메일로 로그인된 기록이 있다면 예외 처리
         String loginKey = "login:" + email;
         String existingToken = redisTemplate.opsForValue().get(loginKey);
-        if (existingToken != null) {
-            throw new IllegalStateException("이미 로그인 상태입니다.");
-        }
+//        if (existingToken != null) {
+//            throw new IllegalStateException("이미 로그인 상태입니다.");
+//        }
 
         // 사용자 조회
         User user = userRepository.findByEmail(request.getEmail())

@@ -1,7 +1,8 @@
 package com.example.newsfeed.login.config;
 
-import com.example.newsfeed.login.JwtAuthenticationFilter;
 import com.example.newsfeed.login.JwtTokenProvider;
+import com.example.newsfeed.login.filter.CustomAuthenticationEntryPoint;
+import com.example.newsfeed.login.filter.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -48,6 +49,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,"/authentication/login").permitAll() // /authentication/** 로 시작하는 요청은 인증 없이 허용 (로그인/회원가입 등)
                         .requestMatchers(HttpMethod.POST,"/authentication/logout").permitAll() // /authentication/** 로 시작하는 요청은 인증 없이 허용 (로그인/회원가입 등)
                         .anyRequest().authenticated() // 그 외의 모든 요청은 인증 필요
+                )
+                .addFilterBefore(
+                        new JwtAuthenticationFilter(jwtTokenProvider, userDetailsService, redisTemplate),
+                        UsernamePasswordAuthenticationFilter.class
+                )
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 )
                 .addFilterBefore(
                         new JwtAuthenticationFilter(jwtTokenProvider, userDetailsService, redisTemplate), // JwtAuthenticationFilter 를 직접 만든 JWT 인증 필터로 등록
