@@ -1,10 +1,7 @@
 package com.example.newsfeed.user.controller;
 
 import com.example.newsfeed.user.dto.*;
-import com.example.newsfeed.user.repository.UserRepository;
 import com.example.newsfeed.user.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,17 +15,13 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
 
     //403에러
     //회원가입
     @PostMapping("/signup")
-    public ResponseEntity<SignUpResponseDto> signUp(@RequestBody SignUpRequestDto requestDto, HttpServletRequest request)
+    public ResponseEntity<SignUpResponseDto> signUp(@RequestBody SignUpRequestDto requestDto)
     {
         SignUpResponseDto signUpResponseDto = userService.signup(requestDto);
-
-        HttpSession session = request.getSession();
-        session.setAttribute("user", requestDto.getNickname());
 
         return new ResponseEntity<>(signUpResponseDto, HttpStatus.CREATED);
     }
@@ -69,6 +62,7 @@ public class UserController {
     //회원정보 수정
     @PutMapping()
     public ResponseEntity<String> updateUser(@RequestBody UpdateUserResquestDto requestDto) {
+        System.out.println("⚡ updateUser 컨트롤러 진입 성공!");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
@@ -79,7 +73,7 @@ public class UserController {
 
 //    회원탈퇴
     @DeleteMapping()
-    public ResponseEntity<String> deleteUser(@RequestBody UpdateUserResquestDto requestDto) {
+    public ResponseEntity<String> deleteUser() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();

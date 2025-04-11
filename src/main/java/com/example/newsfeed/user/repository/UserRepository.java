@@ -3,9 +3,6 @@ package com.example.newsfeed.user.repository;
 import com.example.newsfeed.entity.User;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -24,4 +21,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
     }
 
     boolean existsByNickname(String nickname);
+    boolean existsByEmail(String email);
+    boolean existsByNicknameAndEmailNot(String nickname, String email);
 }

@@ -7,12 +7,9 @@ import com.example.newsfeed.user.dto.UserResponseDto;
 import com.example.newsfeed.entity.User;
 import com.example.newsfeed.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 
@@ -50,6 +47,14 @@ public class UserService {
 
         if(birthDate == null) {
             throw new IllegalArgumentException("생년월일을 입력해주세요.");
+        }
+
+        if (userRepository.existsByEmail(email)) {
+            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+        }
+
+        if (userRepository.existsByNickname(nickname)) {
+            throw new IllegalArgumentException("이미 사용 중인 닉네임입니다.");
         }
 
 
@@ -105,12 +110,20 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(()-> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
 
-
+        String newNickname = requestDto.getNickname();
+        if (userRepository.existsByNicknameAndEmailNot(newNickname, email)){
+            throw new IllegalArgumentException("중복 된 닉네임 입니다.");
+        }
         boolean isDuplicate = userRepository.existsByNickname(requestDto.getNickname());
 
-        if(isDuplicate && !user.getNickname().equals(requestDto.getNickname())){
+
+        if(isDuplicate && user.getNickname().equals(requestDto.getNickname())){
             throw new IllegalArgumentException("사용 중인 닉네임 입니다.");
+
         }
+
+
+
         user.setNickname(requestDto.getNickname());
     }
 
