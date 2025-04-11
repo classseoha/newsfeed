@@ -69,6 +69,7 @@ public class UserController {
     //회원정보 수정
     @PutMapping()
     public ResponseEntity<String> updateUser(@RequestBody UpdateUserResquestDto requestDto) {
+        System.out.println("⚡ updateUser 컨트롤러 진입 성공!");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
