@@ -130,10 +130,18 @@ public class UserService {
 
     //회원탈퇴
     @Transactional
-    public void delete(String email) {
+    public void delete(String email, String password) {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(()->new IllegalArgumentException("유저 없음"));
+
+        User findUser = userRepository.findByIdOrElseThrow(email);
+
+        //1. 기존 비밀번호와 입력한 비밀번호가 다른지 확인.
+        if(!passwordEncoder.matches(password, findUser.getPassword())){
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
         userRepository.delete(user);
         userRepository.flush();
 

@@ -73,12 +73,12 @@ public class UserController {
 
 //    회원탈퇴
     @DeleteMapping()
-    public ResponseEntity<String> deleteUser() {
+    public ResponseEntity<String> deleteUser(@RequestBody DeleteUserRequestDto requestDto) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
 
-        userService.delete(email);
+        userService.delete(email, requestDto.getPassword());
 
         return ResponseEntity.ok("회원 탈퇴 완료되었습니다.");
         }
