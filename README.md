@@ -92,4 +92,4 @@ https://documenter.getpostman.com/view/43163091/2sB2cVdgQ7
 
 ## 📌 ERD
 
-<img src="">
+<img src="https://github.com/classseoha/newsfeed/blob/dev/newsfeed_ERD.png?raw=true">
