@@ -9,10 +9,10 @@ import org.springframework.data.annotation.CreatedDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "realation")
+@Table(name = "relation")
 @Getter
 @NoArgsConstructor
-public class Realation {
+public class Relation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,12 +20,12 @@ public class Realation {
 
     @Setter
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "following_email")
     private User followingEmail;
 
     @Setter
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "followed_email")
     private User followedEmail;
 
 
